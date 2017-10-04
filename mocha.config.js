@@ -7,8 +7,11 @@ process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:543
 process.env.HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY || 'FAKE_HUBSPOST_API_KEY'
 process.env.JWT_PUBLIC_KEY = 'FAKE_PUBLIC_KEY'
 
+const fs = require('fs-extra')
+const APP_ROOT = __dirname
 const chaiHttp = require('chai-http')
 global.chai = require('chai')
+global.AssertionError = chai.AssertionError
 global.expect = chai.expect
 const webServer = require('./web-server')
 
@@ -85,3 +88,25 @@ chai.Assertion.addMethod('haveDuplicates', function() {
     dups // actual
   );
 })
+
+
+global.readFile = path =>
+  fs.readFile(APP_ROOT+path)
+
+global.expectFilesToExists = function(paths){
+  return Promise.all(
+    paths.map(path =>
+      fs.access(`${APP_ROOT}/${path}`).then(
+        good => true,
+        bad => false,
+      )
+    )
+  ).then(results => {
+    const missingPaths = paths.filter((path, index) => !results[index])
+    if (missingPaths.length === 0) return
+    throw new AssertionError(
+      "expected the following files to exist:\n  "+
+      missingPaths.join("\n  ")
+    )
+  })
+}
