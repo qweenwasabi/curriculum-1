@@ -32,54 +32,33 @@ const loadDigest = () =>
     glossary: loadGlossary(),
   })
   .then(digest => {
-    // do any phases link to any missing challenges?
-    // do any challenges or modules reference any missing skills?
-
-    linkSkillsToModules(digest)
-
-
-    // const rawSkills = [];
-    // [].concat(
-    //   Object.values(digest.modules),
-    //   Object.values(digest.challenges),
-    // ).forEach(module => {
-    //   rawSkills.push(...module.rawSkills)
-    // })
-    // digest.rawSkills = rawSkills
-
+    addModulesToSkills(digest)
+    addSkillsToPhases(digest)
 
     console.log('DIGEST: done')
     return digest
   })
 
 
-  // .then(digest => {
-  //   const skills = [];
 
-  //   [].concat(
-  //     Object.values(digest.modules),
-  //     Object.values(digest.challenges),
-  //   ).map(x => {
-  //     x.skills.forEach(skill => {
-  //       if (!skills.includes(skill))
-  //         skills.push(skill)
-  //     })
-  //   })
-
-  //   digest._skills = skills.sort().map(name => ({
-  //     name,
-  //     id: nameToId(name),
-  //   }))
-
-  //   return digest
-  // })
-
-
-const linkSkillsToModules = digest => {
+const addModulesToSkills = digest => {
   Object.values(digest.skills).forEach(skill => {
     skill.modules = Object.values(digest.modules)
       .filter(module => module.skills.includes(skill.id))
       .map(module => module.id)
+  })
+}
+
+const addSkillsToPhases = digest => {
+  Object.values(digest.phases).forEach(phase => {
+    phase.skills = []
+    phase.challenges.forEach(challengeId => {
+      const challenge = digest.challenges[challengeId]
+      if (!challenge) return
+      challenge.skills.forEach(skill => {
+        phase.skills.includes(skill) || phase.skills.push(skill)
+      })
+    })
   })
 }
 

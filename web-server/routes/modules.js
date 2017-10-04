@@ -16,12 +16,8 @@ module.exports = app => {
     if (!currentModule) return next()
     const currentModuleSkills = currentModule.skills
       .map(id => {
-        const skill = digest.skills[id]
-        return {
-          id: skill.id,
-          nameAsHTML: skill.nameAsHTML,
-          path: `/skills/${skill.id}/`,
-        }
+        const { nameAsHTML, path } = digest.skills[id]
+        return { id, nameAsHTML, path }
       })
 
     response.locals.moduleName = moduleName

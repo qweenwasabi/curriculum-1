@@ -11,7 +11,13 @@ module.exports = app => {
     queries.getChecksForUserAndLabels({userId})
       .then(checks => {
         const skills = Object.keys(response.digest.skills).map(skillId =>
-          Object.assign({}, response.digest.skills[skillId], {checked: !!checks[skillId]})
+          Object.assign(
+            {},
+            response.digest.skills[skillId],
+            {
+              checked: !!checks[skillId],
+            }
+          )
         )
         response.render('skills/index', {
           skills,

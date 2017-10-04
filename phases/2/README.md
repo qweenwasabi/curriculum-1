@@ -17,7 +17,7 @@ In this phase you will learn…
 - how to create static HTML & CSS “pages” from mockups and wireframes
 - how to use the latest version of JavaScript
 
-## Modules
+## Challenges
 
 - [Command line Todo List With Callbacks](../../challenges/Command-Line-Todo-List-With-Callbacks)
 - [Movie Search CLI](../../challenges/Movie-Search-CLI)
