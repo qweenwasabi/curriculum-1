@@ -1,6 +1,7 @@
 const Path = require('path')
 const fs = require('fs-extra')
-const lexer = require('marked').lexer
+const renderMarkdown = require('marked')
+const lexer = renderMarkdown.lexer
 
 const APP_ROOT = Path.resolve(__dirname, '..')
 
@@ -154,8 +155,17 @@ const extractListFromMarkdownSection = (document, text, depth) => {
   return items
 }
 
+const renderNameAsHTML = objects => {
+  objects.forEach(object => {
+    object.nameAsHTML = renderMarkdown(object.name)
+      .replace(/^<p>/, '')
+      .replace(/<\/p>\n?$/, '')
+  })
+  return objects
+}
 
- module.exports = {
+
+module.exports = {
   APP_ROOT,
   promiseMap,
   readDirectoriesWithREADMEs,
@@ -165,4 +175,5 @@ const extractListFromMarkdownSection = (document, text, depth) => {
   nameToId,
   removeREADMEMarkdown,
   getHeadingFromMarkdown,
- }
+  renderNameAsHTML,
+}

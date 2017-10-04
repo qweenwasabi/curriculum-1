@@ -31,11 +31,6 @@ module.exports = app => {
   app.locals.weeksAgoInWords = date =>
     date ? moment().diff(moment(date), 'week')+' weeks ago' : null
 
-
-
-  app.locals.renderSkill = skill =>
-    renderMarkdown(skill.rawText).slice(3,-5).trim()
-
   app.locals.sortSkills = skills => {
     skills = Array.isArray(skills)
       ? skills
